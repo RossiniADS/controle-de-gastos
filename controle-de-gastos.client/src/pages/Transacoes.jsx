@@ -70,10 +70,27 @@ const Transacoes = () => {
     );
 
     /**
+     * Mapeamento auxiliar para exibir o nome da categoria
+     * a partir do ID na listagem de transações.
+     * Evita fazer buscas repetidas no array durante o render.
+     */
+    const categoriasMap = Object.fromEntries(
+        categorias.map(c => [String(c.id), c.descricao])
+    );
+
+
+    /**
      * Converte o tipo numérico da transação em texto,
      * utilizado principalmente nas mensagens de validação.
      */
-    const tipoTexto = t => (t === 0 ? 'Despesa' : 'Receita');
+    const tipoTexto = t => {
+        switch (t) {
+            case 0: return 'Despesa';
+            case 1: return 'Receita';
+            case 2: return 'Ambas';
+            default: return '';
+        }
+    };
 
     /**
      * Evento de submit do formulário.
@@ -106,7 +123,7 @@ const Transacoes = () => {
 
         if (
             categoria &&
-            categoria.finalidade !== 'Ambas' &&
+            categoria.finalidade !== 2 && 
             categoria.finalidade !== form.tipo
         ) {
             alert(
@@ -211,20 +228,22 @@ const Transacoes = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>Descrição</th>
-                        <th>Valor</th>
-                        <th>Tipo</th>
                         <th>Pessoa</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Tipo</th>
+                        <th>Valor</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {transacoes.map(t => (
                         <tr key={t.id}>
-                            <td>{t.descricao}</td>
-                            <td>R$ {t.valor}</td>
-                            <td>{t.tipo === 0 ? 'Despesa' : 'Receita'}</td>
                             <td>{pessoasMap[String(t.pessoaId)]}</td>
+                            <td>{t.descricao}</td>
+                            <td>{categoriasMap[String(t.categoriaId)]}</td>
+                            <td>{t.tipo === 0 ? 'Despesa' : 'Receita'}</td>
+                            <td>R$ {t.valor}</td>
                         </tr>
                     ))}
                 </tbody>
