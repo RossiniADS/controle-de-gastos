@@ -23,6 +23,21 @@ namespace controle_de_gastos.Server.Services
             return await Task.FromResult(transacoes);
         }
 
+        // Busca uma transação específica pelo Id.
+        public async Task<TransacaoResponse> ObterPorIdAsync(Guid id)
+        {
+            var transacao = MockData.Transacoes.FirstOrDefault(t => t.Id == id);
+            if (transacao == null)
+            {
+                return await Task.FromResult<TransacaoResponse>(null);
+            }
+
+            var response = TransacaoResponse.FromEntity(transacao);
+            response.PessoaNome = MockData.Pessoas.FirstOrDefault(p => p.Id == transacao.PessoaId)?.Nome;
+            response.CategoriaDescricao = MockData.Categorias.FirstOrDefault(c => c.Id == transacao.CategoriaId)?.Descricao;
+            return await Task.FromResult(response);
+        }
+
         // Cria uma nova transação aplicando todas as regras do sistema.
         public async Task<TransacaoResponse> CriarAsync(TransacaoRequest request)
         {

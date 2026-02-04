@@ -2,15 +2,18 @@ using controle_de_gastos.Server.Models;
 
 namespace controle_de_gastos.Server.Interfaces
 {
-    // Interface que define o contrato do serviço de transações.
-    // Aqui são declaradas apenas as operações disponíveis,
-    // sem a implementação das regras de negócio.
+    // Interface que define o contrato do serviÃ§o de transaÃ§Ãµes.
+    // Aqui sÃ£o declaradas apenas as operaÃ§Ãµes disponÃ­veis,
+    // sem a implementaÃ§Ã£o das regras de negÃ³cio.
     public interface ITransacaoService
     {
-        // Retorna todas as transações registradas no sistema.
+        // Retorna todas as transaÃ§Ãµes registradas no sistema.
         Task<IEnumerable<TransacaoResponse>> ListarTodasAsync();
 
-        // Cria uma nova transação e retorna o registro criado.
+        // Busca uma transaÃ§Ã£o especÃ­fica pelo Id.
+        Task<TransacaoResponse> ObterPorIdAsync(Guid id);
+
+        // Cria uma nova transaÃ§Ã£o e retorna o registro criado.
         Task<TransacaoResponse> CriarAsync(TransacaoRequest request);
     }
 }

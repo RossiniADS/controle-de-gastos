@@ -1,15 +1,15 @@
 import axios from 'axios';
 
 /**
- * Instância base do Axios.
- * Centraliza a configuração da API
+ * InstÃ¢ncia base do Axios.
+ * Centraliza a configuraÃ§Ã£o da API
  */
 const api = axios.create({
     baseURL: 'https://localhost:7167/api',
 });
 
 /**
- * Serviço responsável pelas operações relacionadas a Pessoas.
+ * ServiÃ§o responsÃ¡vel pelas operaÃ§Ãµes relacionadas a Pessoas.
  */
 export const PessoaService = {
 
@@ -33,8 +33,8 @@ export const PessoaService = {
 
     /**
      * Remove uma pessoa pelo ID
-     * Importante: no backend essa operação também remove
-     * as transações associadas à pessoa
+     * Importante: no backend essa operaÃ§Ã£o tambÃ©m remove
+     * as transaÃ§Ãµes associadas Ã  pessoa
      */
     deletar: (id) => api.delete(`/pessoas/${id}`),
 
@@ -46,7 +46,7 @@ export const PessoaService = {
 };
 
 /**
- * Serviço responsável pelas operações relacionadas a Categorias.
+ * ServiÃ§o responsÃ¡vel pelas operaÃ§Ãµes relacionadas a Categorias.
  */
 export const CategoriaService = {
 
@@ -68,17 +68,17 @@ export const CategoriaService = {
 };
 
 /**
- * Serviço responsável pelas operações relacionadas a Transações.
+ * ServiÃ§o responsÃ¡vel pelas operaÃ§Ãµes relacionadas a TransaÃ§Ãµes.
  */
 export const TransacaoService = {
 
     /**
-     * Retorna a lista de transações cadastradas
+     * Retorna a lista de transaÃ§Ãµes cadastradas
      */
     listar: () => api.get('/transacoes'),
 
     /**
-     * Cria uma nova transação
+     * Cria uma nova transaÃ§Ã£o
      * @param {Object} dados
      */
     criar: (dados) => api.post('/transacoes', dados),
