@@ -1,3 +1,6 @@
+﻿using controle_de_gastos.Server.Interfaces;
+using controle_de_gastos.Server.Services;
+
 namespace controle_de_gastos.Server
 {
     public class Program
@@ -6,39 +9,37 @@ namespace controle_de_gastos.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddAuthorization();
+            // Controllers
+            builder.Services.AddControllers();
 
+            // CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("dev",
+                    policy => policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
+
+            builder.Services.AddScoped<IPessoaService, PessoaService>();
+            builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+            builder.Services.AddScoped<ITransacaoService, TransacaoService>();
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
-            // Configure the HTTP request pipeline.
-
             app.UseHttpsRedirection();
+
+            app.UseCors("dev");
 
             app.UseAuthorization();
 
-            var summaries = new[]
-            {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
+            app.MapControllers();
 
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            });
-
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.MapFallbackToFile("/index.html");
 
             app.Run();
