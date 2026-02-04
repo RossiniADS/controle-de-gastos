@@ -5,8 +5,18 @@ import Categorias from './pages/Categorias';
 import Transacoes from './pages/Transacoes';
 import Consultas from './pages/Consultas';
 
-
+/**
+ * Componente raiz da aplicação.
+ * Responsável por:
+ *  - Configurar o sistema de rotas
+ *  - Definir o layout principal
+ *  - Centralizar a navegação entre as páginas
+ */
 function App() {
+    /**
+    * Router envolve toda a aplicação para permitir
+    * a navegação entre páginas sem recarregar o browser.
+    */
     return (
         <Router>
             <div className="App">

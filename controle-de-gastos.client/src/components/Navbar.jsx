@@ -1,6 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+ * Componente de navegação principal da aplicação.
+ * Responsável por permitir o acesso às principais telas do sistema.
+ */
 const Navbar = () => {
   return (
     <nav style={{ padding: '1rem', backgroundColor: '#f0f0f0', marginBottom: '1rem' }}>
