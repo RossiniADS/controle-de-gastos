@@ -47,6 +47,10 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
+    test: {
+        environment: 'jsdom',
+        setupFiles: './src/setupTests.ts',
+    },
     server: {
         port: parseInt(env.DEV_SERVER_PORT || '63763'),
         https: {

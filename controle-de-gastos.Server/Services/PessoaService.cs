@@ -6,9 +6,9 @@ using controle_de_gastos.Server.Data;
 namespace controle_de_gastos.Server.Services
 {
 
-    // Implementação do serviço de pessoas.
-    // Centraliza as regras de negócio relacionadas às pessoas
-    // e manipula os dados armazenados em memória no MockData.
+    // ImplementaÃ§Ã£o do serviÃ§o de pessoas.
+    // Centraliza as regras de negÃ³cio relacionadas Ã s pessoas
+    // e manipula os dados armazenados em memÃ³ria no MockData.
     public class PessoaService : IPessoaService
     {
 
@@ -19,7 +19,7 @@ namespace controle_de_gastos.Server.Services
             return await Task.FromResult(pessoas);
         }
 
-        // Busca uma pessoa específica pelo Id.
+        // Busca uma pessoa especÃ­fica pelo Id.
         public async Task<PessoaResponse> ObterPorIdAsync(Guid id)
         {
             var pessoa = MockData.Pessoas.FirstOrDefault(p => p.Id == id);
@@ -27,7 +27,7 @@ namespace controle_de_gastos.Server.Services
         }
 
         // Cria uma nova pessoa.
-        // Um novo Id é gerado antes de adicionar na lista.
+        // Um novo Id Ã© gerado antes de adicionar na lista.
         public async Task<PessoaResponse> CriarAsync(PessoaRequest request)
         {
             var pessoa = new Pessoa
@@ -41,7 +41,7 @@ namespace controle_de_gastos.Server.Services
         }
 
         // Atualiza os dados de uma pessoa existente.
-        // A busca é feita pelo Id e o registro é substituído.
+        // A busca Ã© feita pelo Id e o registro Ã© substituÃ­do.
         public async Task<PessoaResponse> AtualizarAsync(Guid id, PessoaRequest request)
         {
             var index = MockData.Pessoas.FindIndex(p => p.Id == id);
@@ -56,7 +56,7 @@ namespace controle_de_gastos.Server.Services
         }
 
         // Remove uma pessoa pelo Id.
-        // Também remove todas as transações vinculadas a ela.
+        // TambÃ©m remove todas as transaÃ§Ãµes vinculadas a ela.
         public async Task<bool> DeletarAsync(Guid id)
         {
             var pessoa = MockData.Pessoas.FirstOrDefault(p => p.Id == id);
