@@ -1,4 +1,4 @@
-using controle_de_gastos.Server.Entities;
+using controle_de_gastos.Server.Models;
 
 namespace controle_de_gastos.Server.Interfaces
 {
@@ -8,9 +8,9 @@ namespace controle_de_gastos.Server.Interfaces
     public interface ITransacaoService
     {
         // Retorna todas as transações registradas no sistema.
-        Task<IEnumerable<Transacao>> ListarTodasAsync();
+        Task<IEnumerable<TransacaoResponse>> ListarTodasAsync();
 
         // Cria uma nova transação e retorna o registro criado.
-        Task<Transacao> CriarAsync(Transacao transacao);
+        Task<TransacaoResponse> CriarAsync(TransacaoRequest request);
     }
 }

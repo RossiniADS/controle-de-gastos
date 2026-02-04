@@ -1,4 +1,4 @@
-using controle_de_gastos.Server.Entities;
+using controle_de_gastos.Server.Models;
 
 namespace controle_de_gastos.Server.Interfaces
 {
@@ -9,11 +9,11 @@ namespace controle_de_gastos.Server.Interfaces
     {
         // Retorna todas as categorias cadastradas.
         // Método assíncrono para não bloquear a execução enquanto busca os dados.
-        Task<IEnumerable<Categoria>> ListarTodasAsync();
+        Task<IEnumerable<CategoriaResponse>> ListarTodasAsync();
 
         // Cria uma nova categoria no sistema
         // e retorna a categoria já persistida.
-        Task<Categoria> CriarAsync(Categoria categoria);
+        Task<CategoriaResponse> CriarAsync(CategoriaRequest request);
 
         // Calcula e retorna os totais agrupados por categoria.
         Task<object> ObterTotaisPorCategoriaAsync();

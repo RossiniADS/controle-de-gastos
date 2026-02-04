@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using controle_de_gastos.Server.Entities;
+using controle_de_gastos.Server.Models;
 using controle_de_gastos.Server.Interfaces;
 
 namespace controle_de_gastos.Server.Controllers
 {
-    // Controller responsável pelos endpoints de transações financeiras
-    // A rota base será: api/transacoes
+    // A rota base sera: api/transacoes
+    // Controller responsavel pelos endpoints de transaÃ§Ãµes financeiras
     [ApiController]
     [Route("api/[controller]")]
     public class TransacoesController : ControllerBase
@@ -17,28 +17,27 @@ namespace controle_de_gastos.Server.Controllers
             _transacaoService = transacaoService;
         }
 
-        // Endpoint GET: api/transacoes
-        // Retorna todas as transações registradas
+        // Endpoint GET: api/transaÃ§Ãµes
+        // Retorna todas as transaÃ§Ãµes registradas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transacao>>> Get()
+        public async Task<ActionResult<IEnumerable<TransacaoResponse>>> Get()
         {
             return Ok(await _transacaoService.ListarTodasAsync());
         }
 
-        // Endpoint POST: api/transacoes
-        // Cria uma nova transação
+        // Endpoint POST: api/transaÃ§Ãµes
+        // Cria uma nova transaÃ§Ã£o
         [HttpPost]
-        public async Task<ActionResult<Transacao>> Post(Transacao transacao)
+        public async Task<ActionResult<TransacaoResponse>> Post(TransacaoRequest request)
         {
             try
             {
-                var novaTransacao = await _transacaoService.CriarAsync(transacao);
-
+                var novaTransacao = await _transacaoService.CriarAsync(request);
                 return CreatedAtAction(nameof(Get), new { id = novaTransacao.Id }, novaTransacao);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

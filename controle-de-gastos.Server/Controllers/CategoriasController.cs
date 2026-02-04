@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using controle_de_gastos.Server.Entities;
+using controle_de_gastos.Server.Models;
 using controle_de_gastos.Server.Interfaces;
 
 namespace controle_de_gastos.Server.Controllers
@@ -18,18 +18,17 @@ namespace controle_de_gastos.Server.Controllers
         // Endpoint GET: api/categorias
         // Retorna a lista completa de categorias cadastradas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Categoria>>> Get()
+        public async Task<ActionResult<IEnumerable<CategoriaResponse>>> Get()
         {
             return Ok(await _categoriaService.ListarTodasAsync());
         }
 
         // Endpoint POST: api/categorias
-        // Recebe uma nova categoria no corpo da requisição e salva no sistema
+        // Recebe uma nova categoria no corpo da requisiÃ§Ã£o e salva no sistema
         [HttpPost]
-        public async Task<ActionResult<Categoria>> Post(Categoria categoria)
+        public async Task<ActionResult<CategoriaResponse>> Post(CategoriaRequest request)
         {
-            var novaCategoria = await _categoriaService.CriarAsync(categoria);
-
+            var novaCategoria = await _categoriaService.CriarAsync(request);
             return CreatedAtAction(nameof(Get), new { id = novaCategoria.Id }, novaCategoria);
         }
 
@@ -38,9 +37,7 @@ namespace controle_de_gastos.Server.Controllers
         [HttpGet("totais")]
         public async Task<IActionResult> GetTotais()
         {
-            var resultado = await _categoriaService.ObterTotaisPorCategoriaAsync();
-
-            return Ok(resultado);
+            return Ok(await _categoriaService.ObterTotaisPorCategoriaAsync());
         }
     }
 }

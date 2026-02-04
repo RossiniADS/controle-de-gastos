@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using controle_de_gastos.Server.Entities;
+using controle_de_gastos.Server.Models;
 using controle_de_gastos.Server.Interfaces;
 
 namespace controle_de_gastos.Server.Controllers
 {
-    // Controller respons·vel por expor os endpoints relacionados ‡s pessoas
-    // A rota base fica no padr„o: api/pessoas
+    // A rota base fica no padr√£o: api/pessoas
+    // Controller responsavel por expor os endpoints relacionados as pessoas
     [ApiController]
     [Route("api/[controller]")]
     public class PessoasController : ControllerBase
@@ -20,7 +20,7 @@ namespace controle_de_gastos.Server.Controllers
         // Endpoint GET: api/pessoas
         // Retorna todas as pessoas cadastradas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pessoa>>> Get()
+        public async Task<ActionResult<IEnumerable<PessoaResponse>>> Get()
         {
             return Ok(await _pessoaService.ListarTodasAsync());
         }
@@ -28,22 +28,19 @@ namespace controle_de_gastos.Server.Controllers
         // Endpoint POST: api/pessoas
         // Cria um novo registro de pessoa
         [HttpPost]
-        public async Task<ActionResult<Pessoa>> Post(Pessoa pessoa)
+        public async Task<ActionResult<PessoaResponse>> Post(PessoaRequest request)
         {
-            var novaPessoa = await _pessoaService.CriarAsync(pessoa);
-
+            var novaPessoa = await _pessoaService.CriarAsync(request);
             return CreatedAtAction(nameof(Get), new { id = novaPessoa.Id }, novaPessoa);
         }
 
         // Endpoint PUT: api/pessoas/{id}
         // Atualiza os dados de uma pessoa existente
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, Pessoa pessoa)
+        public async Task<IActionResult> Put(Guid id, PessoaRequest request)
         {
-            if (id != pessoa.Id) return BadRequest();
-
-            await _pessoaService.AtualizarAsync(pessoa);
-
+            var atualizada = await _pessoaService.AtualizarAsync(id, request);
+            if (atualizada == null) return NotFound();
             return NoContent();
         }
 
@@ -52,8 +49,8 @@ namespace controle_de_gastos.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _pessoaService.DeletarAsync(id);
-
+            var deletado = await _pessoaService.DeletarAsync(id);
+            if (!deletado) return NotFound();
             return NoContent();
         }
 

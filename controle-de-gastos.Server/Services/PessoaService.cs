@@ -5,65 +5,67 @@ using controle_de_gastos.Server.Data;
 
 namespace controle_de_gastos.Server.Services
 {
-    // ImplementaÃ§Ã£o do serviÃ§o de pessoas.
-    // Centraliza as regras de negÃ³cio relacionadas Ã s pessoas
-    // e manipula os dados armazenados em memÃ³ria no MockData.
+
+    // Implementação do serviço de pessoas.
+    // Centraliza as regras de negócio relacionadas às pessoas
+    // e manipula os dados armazenados em memória no MockData.
     public class PessoaService : IPessoaService
     {
+
         // Retorna todas as pessoas cadastradas.
-        public async Task<IEnumerable<Pessoa>> ListarTodasAsync()
+        public async Task<IEnumerable<PessoaResponse>> ListarTodasAsync()
         {
-            return await Task.FromResult(MockData.Pessoas);
+            var pessoas = MockData.Pessoas.Select(p => PessoaResponse.FromEntity(p));
+            return await Task.FromResult(pessoas);
         }
 
-        // Busca uma pessoa especÃ­fica pelo Id.
-        public async Task<Pessoa> ObterPorIdAsync(Guid id)
+        // Busca uma pessoa específica pelo Id.
+        public async Task<PessoaResponse> ObterPorIdAsync(Guid id)
         {
             var pessoa = MockData.Pessoas.FirstOrDefault(p => p.Id == id);
-            return await Task.FromResult(pessoa);
+            return await Task.FromResult(pessoa != null ? PessoaResponse.FromEntity(pessoa) : null);
         }
 
         // Cria uma nova pessoa.
-        // Um novo Id Ã© gerado antes de adicionar na lista.
-        public async Task<Pessoa> CriarAsync(Pessoa pessoa)
+        // Um novo Id é gerado antes de adicionar na lista.
+        public async Task<PessoaResponse> CriarAsync(PessoaRequest request)
         {
-            pessoa.Id = Guid.NewGuid();
+            var pessoa = new Pessoa
+            {
+                Id = Guid.NewGuid(),
+                Nome = request.Nome,
+                Idade = request.Idade
+            };
             MockData.Pessoas.Add(pessoa);
-
-            return await Task.FromResult(pessoa);
+            return await Task.FromResult(PessoaResponse.FromEntity(pessoa));
         }
 
         // Atualiza os dados de uma pessoa existente.
-        // A busca Ã© feita pelo Id e o registro Ã© substituÃ­do.
-        public async Task<Pessoa> AtualizarAsync(Pessoa pessoa)
+        // A busca é feita pelo Id e o registro é substituído.
+        public async Task<PessoaResponse> AtualizarAsync(Guid id, PessoaRequest request)
         {
-            var index = MockData.Pessoas.FindIndex(p => p.Id == pessoa.Id);
-
+            var index = MockData.Pessoas.FindIndex(p => p.Id == id);
             if (index != -1)
             {
-                MockData.Pessoas[index] = pessoa;
+                var pessoa = MockData.Pessoas[index];
+                pessoa.Nome = request.Nome;
+                pessoa.Idade = request.Idade;
+                return await Task.FromResult(PessoaResponse.FromEntity(pessoa));
             }
-
-            return await Task.FromResult(pessoa);
+            return await Task.FromResult<PessoaResponse>(null);
         }
 
         // Remove uma pessoa pelo Id.
-        // TambÃ©m remove todas as transaÃ§Ãµes vinculadas a ela.
+        // Também remove todas as transações vinculadas a ela.
         public async Task<bool> DeletarAsync(Guid id)
         {
             var pessoa = MockData.Pessoas.FirstOrDefault(p => p.Id == id);
-
             if (pessoa != null)
             {
-                // Regra de negÃ³cio: ao excluir a pessoa,
-                // as transaÃ§Ãµes dela tambÃ©m devem ser apagadas
                 MockData.Transacoes.RemoveAll(t => t.PessoaId == id);
-
                 MockData.Pessoas.Remove(pessoa);
-
                 return await Task.FromResult(true);
             }
-
             return await Task.FromResult(false);
         }
 
@@ -84,7 +86,6 @@ namespace controle_de_gastos.Server.Services
                     .Where(t => t.PessoaId == p.Id && t.Tipo == TipoTransacao.Despesa)
                     .Sum(t => t.Valor)
             }).ToList();
-
             return await Task.FromResult(lista);
         }
 
@@ -97,12 +98,10 @@ namespace controle_de_gastos.Server.Services
                 TotalGeralReceitas = MockData.Transacoes
                     .Where(t => t.Tipo == TipoTransacao.Receita)
                     .Sum(t => t.Valor),
-
                 TotalGeralDespesas = MockData.Transacoes
                     .Where(t => t.Tipo == TipoTransacao.Despesa)
                     .Sum(t => t.Valor)
             };
-
             return await Task.FromResult(resumo);
         }
     }
